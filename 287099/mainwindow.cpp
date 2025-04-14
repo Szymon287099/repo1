@@ -161,3 +161,9 @@ void MainWindow::on_autor_clicked()
 {
     QMessageBox::information(this, "O Autorze", "Szymon Nowak 287099");
 }
+
+void MainWindow::on_wyczysc_clicked()
+{
+    ui->label->setText("");
+}
+

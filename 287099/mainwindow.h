@@ -38,6 +38,8 @@ private slots:
     void on_rowna_sie_clicked();
     void on_autor_clicked();
 
+    void on_wyczysc_clicked();
+
 private:
     Ui::MainWindow *ui;
     Kalkulator kalkulator;
