@@ -1,0 +1,91 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <random>
+#include <ctime>
+
+class Card {
+public:
+    std::string rank;
+    std::string suit;
+    Card(std::string r, std::string s) {
+        rank = r;
+        suit = s;
+    }
+    std::string toString() const {
+        return rank + " " + suit;
+    }
+};
+
+class Deck {
+public:
+    std::vector<Card> talia;
+    void fillStandardDeck() {
+        std::vector<std::string> suits = {"Trefl", "Karo", "Kier", "Pik"};
+        std::vector<std::string> ranks = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
+        std::for_each(ranks.begin(), ranks.end(), [&](const std::string& rank) {
+            std::for_each(suits.begin(), suits.end(), [&](const std::string& suit) {
+                Card k1(rank, suit);
+                talia.push_back(k1);
+            });
+        });
+    }
+    void shuffle() {
+        std::mt19937 mt(time(nullptr));
+        std::shuffle(talia.begin(), talia.end(), mt);
+    }
+    auto drawCard() {
+        if (talia.empty()) {
+            std::cout << "Talia jest pusta" << std::endl;
+        }
+        Card karta = talia[0];
+        talia.erase(talia.begin());
+        return karta;
+    }
+    std::vector<Card> drawCards(size_t n) {
+        std::vector<Card> dobrane;
+        for (int i = 0; i < n; i++) {
+            dobrane.push_back(talia[0]);
+            talia.erase(talia.begin());
+        }
+        return dobrane;
+    }
+    bool isEmpty() {
+        if (talia.size() == 0) {
+            return true;
+        }
+    }
+    size_t size() {
+        return talia.size();
+    }
+    std::vector<Deck> deal(size_t playersCount, size_t cardsPerPlayer) {
+        std::vector<Deck> player;
+        for (int i = 0; i < playersCount; i++) {
+            Deck d1;
+            std::move(talia.begin(), talia.begin() + cardsPerPlayer, std::back_inserter(d1.talia));
+            talia.erase(talia.begin(), talia.begin() + cardsPerPlayer);
+            player.push_back(d1);
+        }
+        return player;
+    }
+};
+
+int main() {
+    Deck d1;
+    d1.fillStandardDeck();
+    d1.shuffle();
+    /* std::vector<Card> dobrane = d1.drawCards(7);
+    for (const Card& karta : dobrane) {
+        std::cout << karta.toString() << std::endl;
+    } */
+    std::vector<Deck> gracze = d1.deal(3, 5);
+    for (const Deck& gracz : gracze) {
+        for (const Card& karta : gracz.talia) {
+            std::cout << karta.toString() << ", ";
+        }
+        std::cout << std::endl;
+    }
+    std::cout << d1.talia.size();
+    return 0;
+}
